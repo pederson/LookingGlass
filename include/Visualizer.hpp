@@ -260,6 +260,10 @@ public:
 			if (m_vertices[7*i+1] > ymin) ymax = m_vertices[7*i+1];
 			if (m_vertices[7*i+2] > zmin) zmax = m_vertices[7*i+2];
 		}
+		std::cout << "xmin: " << xmin << " xmax: " << xmax << std::endl;
+		std::cout << "ymin: " << ymin << " ymax: " << ymax << std::endl;
+		std::cout << "zmin: " << zmin << " zmax: " << zmax << std::endl;
+		std::cout << "centroid: " << xcen << ", " << ycen << ", " << zcen << std::endl;
 
 		m_bounding_box = DrawableBox(std::shared_ptr<DrawablePoint>(new OwnedPoint(xmin,ymin,zmin)),
 									 std::shared_ptr<DrawablePoint>(new OwnedPoint(xmax,ymax,zmax)));
@@ -272,29 +276,15 @@ protected:
 	// context data
 	GLFWwindow * 					m_window_ptr;
 	std::string 					m_window_name;
-	// GLFWwindow * window_ptr;
-	// std::string window_name;
 
 	// model related data
 	std::vector<GLfloat>	m_vertices;			// holds the vertex data (XYZRGBA)
 	std::vector<GLuint> 	m_point_elems;		// element with 1 point
 	std::vector<GLuint>		m_edge_elems;		// element of 2 points
 	std::vector<GLuint>		m_triangle_elems;	// element of 3 points
-	// std::vector<GLuint>		m_quads;			// element of 4 points
 
 	OwnedPoint 				m_centroid;
 	DrawableBox				m_bounding_box;
-
-	// GLfloat * vertices;
-	// GLuint * elements;
-	// float model_centroid[3]; // from [model_min, model_max]
-	// float xmin, xmax, ymin, ymax, zmin, zmax;
-	// unsigned int num_vertices, num_per_vertex, num_vertex_points;
-	// unsigned int num_elements, num_per_element; // this should be deleted one VisualizerGeometricObject is fixed
-	// unsigned int _num_point_elements, _num_per_point_element=1;
-	// unsigned int _num_line_elements, _num_per_line_element=2;
-	// unsigned int _num_tri_elements, _num_per_tri_element=3;
-	// unsigned int _num_quad_elements, _num_per_quad_element=4;
 
 
 	// colors ... so pretty
@@ -302,10 +292,6 @@ protected:
 	std::vector<double>		m_color_alpha;
 	double 					m_colorby_min, m_colorby_max;
 	double					m_alpha_min, m_alpha_max;
-  	// double * _colorby; // one per point
-  	// double * _color_alpha;
-  	// double _colorby_max, _colorby_min, _alpha_max, _alpha_min;
-
 
   	// virtual void draw_model();
   	bool 			m_display_triangles = true;

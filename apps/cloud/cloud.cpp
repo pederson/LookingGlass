@@ -20,11 +20,16 @@ int main(int argc, char * argv[]){
 	const double * y = &(pc.y());
 	const double * z = &(pc.z());
 	const short unsigned int * in = &(pc.intensity());
+	short unsigned int imax = in[0];
+	for (auto i=0; i<pc.pointcount(); i++){
+		if (in[i] > imax) imax = in[i];
+	}
 
 	//mywindow->set_num_vertices(pc.pointcount());
 	for (auto i=0; i<pc.pointcount(); i++){
 		mywindow->add_point(LookingGlass::OwnedPoint(x[i],y[i],z[i]));
-		// mywindow->set_vertex_color(i, LookingGlass::OwnedColor(1.0,1.0,1.0,in[i]));
+		// mywindow->set_vertex_color(i, LookingGlass::OwnedColor(0.5, 0.5, 0.5, 0.5));
+		mywindow->set_vertex_color(i, LookingGlass::OwnedColor(1.0,1.0,1.0,double(in[i])/double(imax)));
 	}
 	mywindow->calculate_bounds();
 
