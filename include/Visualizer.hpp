@@ -3,6 +3,7 @@
 
 // includes from this package
 #include "ColorRamp.hpp"
+#include "DrawableColor.hpp"
 #include "DrawablePoint.hpp"
 #include "DrawableBox.hpp"
 #include "OwnedPoint.hpp"
@@ -63,6 +64,100 @@ public:
 	// getters and setters
 	virtual std::string get_window_name() {return m_window_name;};
 	virtual void set_window_name(std::string w_name);
+
+	// vertices (XYZRGBA)
+	void set_num_vertices(unsigned int nverts) {m_vertices.assign(nverts*7, 1.0);};
+	void set_vertex_point(unsigned int i, const DrawablePoint & pt){
+		m_vertices[7*i] = pt.x();
+		m_vertices[7*i+1] = pt.y();
+		m_vertices[7*i+2] = pt.z();
+	}
+	void set_vertex_color(unsigned int i, const DrawableColor & c){
+		m_vertices[7*i+3] = c.r();
+		m_vertices[7*i+4] = c.g();
+		m_vertices[7*i+5] = c.b();
+		m_vertices[7*i+6] = c.a();
+	}
+
+	// elements
+	// add a point (adds both a vertex and a point element)
+	void add_point(const DrawablePoint & pt){
+		unsigned int nv = m_vertices.size()/7;
+		m_vertices.push_back(pt.x());
+		m_vertices.push_back(pt.y());
+		m_vertices.push_back(pt.z());
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_point_elems.push_back(nv);
+	}
+	// add an edge (adds 2 vertices and an edge element)
+	void add_edge(const DrawablePoint & p1, const DrawablePoint & p2){
+		unsigned int nv = m_vertices.size()/7;
+		m_vertices.push_back(p1.x());
+		m_vertices.push_back(p1.y());
+		m_vertices.push_back(p1.z());
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_edge_elems.push_back(nv);
+
+		m_vertices.push_back(p2.x());
+		m_vertices.push_back(p2.y());
+		m_vertices.push_back(p2.z());
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_edge_elems.push_back(nv+1);
+	}
+	// add a triangle (adds 3 vertices and a triangle element)
+	void add_triangle(const DrawablePoint & p1, const DrawablePoint & p2, const DrawablePoint & p3){
+		unsigned int nv = m_vertices.size()/7;
+		m_vertices.push_back(p1.x());
+		m_vertices.push_back(p1.y());
+		m_vertices.push_back(p1.z());
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_triangle_elems.push_back(nv);
+
+		m_vertices.push_back(p2.x());
+		m_vertices.push_back(p2.y());
+		m_vertices.push_back(p2.z());
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_triangle_elems.push_back(nv+1);
+
+		m_vertices.push_back(p3.x());
+		m_vertices.push_back(p3.y());
+		m_vertices.push_back(p3.z());
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_vertices.push_back(1.0);
+		m_triangle_elems.push_back(nv+2);
+	}
+	// creates a point element associated to an existing vertex
+	void set_point_element(unsigned int i){
+		m_point_elems.push_back(i);
+	}
+	// create an edge element associated with an existing 2 vertices
+	void set_edge_element(unsigned int i1, unsigned int i2){
+		m_edge_elems.push_back(i1);
+		m_edge_elems.push_back(i2);
+	}
+	// create a triangle element associated with an existing 3 vertices
+	void set_triangle_element(unsigned int i1, unsigned int i2, unsigned int i3){
+		m_triangle_elems.push_back(i1);
+		m_triangle_elems.push_back(i2);
+		m_triangle_elems.push_back(i3);
+	}
 
 	void set_color_ramp(CRamp ramp_name);
 	void set_color_interpolation(bool interp) {m_color_ramp.set_interpolation(interp);};
@@ -143,6 +238,32 @@ public:
 	//void set_lock_rotation(bool lock_mode);
 
 	virtual void set_test_case();
+
+	void calculate_bounds(){
+		double npts = m_vertices.size()/7;
+		double xcen=0, ycen=0, zcen=0;
+		for (auto i=0; i<m_vertices.size()/7; i++){
+			xcen += m_vertices[7*i]/npts;
+			ycen += m_vertices[7*i+1]/npts;
+			zcen += m_vertices[7*i+2]/npts;
+		}
+		m_centroid = OwnedPoint(xcen,ycen,zcen);
+
+		double xmin=m_vertices[0], ymin=m_vertices[1], zmin=m_vertices[2];
+		double xmax=m_vertices[0], ymax=m_vertices[1], zmax=m_vertices[2];
+		for (auto i=0; i<m_vertices.size()/7; i++){
+			if (m_vertices[7*i] < xmin) xmin = m_vertices[7*i];
+			if (m_vertices[7*i+1] < ymin) ymin = m_vertices[7*i+1];
+			if (m_vertices[7*i+2] < zmin) zmin = m_vertices[7*i+2];
+
+			if (m_vertices[7*i] > xmax) xmax = m_vertices[7*i];
+			if (m_vertices[7*i+1] > ymin) ymax = m_vertices[7*i+1];
+			if (m_vertices[7*i+2] > zmin) zmax = m_vertices[7*i+2];
+		}
+
+		m_bounding_box = DrawableBox(std::shared_ptr<DrawablePoint>(new OwnedPoint(xmin,ymin,zmin)),
+									 std::shared_ptr<DrawablePoint>(new OwnedPoint(xmax,ymax,zmax)));
+	}
 
 	// running the Visualizer
 	virtual void run();
