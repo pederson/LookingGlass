@@ -4,6 +4,7 @@
 
 #include "../../../simbox/include/Mesh.hpp"
 #include "../../../simbox/include/Mesh2D.hpp"
+#include "../../../simbox/include/RegularMesh2D.hpp"
 
 // use cmake to compile
 
@@ -12,6 +13,7 @@ int main(int argc, char * argv[]){
 
 
 	// read in mesh
+	// std::shared_ptr<simbox::RegularMesh2D> msh = simbox::RegularMesh2D::generate({100,100},{0.5, 1.5}, {0,0});
 	std::shared_ptr<simbox::Mesh2D> msh = simbox::Mesh2D::read_MSH(argv[1]);
 	msh->print_summary();
 

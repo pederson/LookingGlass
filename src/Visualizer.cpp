@@ -149,9 +149,9 @@ void Visualizer::onMouseClick(int button, int action, int modifiers){
 
 }
 
-void Visualizer::onMouseWheel(double xoffset, double yoffset){
+// void Visualizer::onMouseWheel(double xoffset, double yoffset){
 
-}
+// }
 
 void Visualizer::onKeyboard(int key, int scancode, int action, int modifiers){
 
@@ -203,31 +203,33 @@ void Visualizer::onMouseClick(int button, int action, int modifiers){
 	}
 	return;
 }
+*/
 
 void Visualizer::onMouseWheel(double xoffset, double yoffset){
 	//std::cout << "MOUSE WHEEL: xoffset: " << xoffset << " yoffset: " << yoffset << std::endl;
 	float zoom_scale_new;
 	if (yoffset < 0){
-		zoom_level -= 0.05;
+		m_zoom_level -= 0.05;
 
 	}
 	else if (yoffset > 0){
-		zoom_level += 0.05;
+		m_zoom_level += 0.05;
 
 	}
-	//std::cout << "zoom level: " << zoom_level << std::endl;
-	if (zoom_level > 5.0) zoom_level = 5.0; // limit the zoom in
-	if (zoom_level < 0.5) zoom_level = 0.5; // limit the zoom out
-	zoom_scale_new = 1/(zoom_level);
-	eye_vec = focus_vec + (eye_vec-focus_vec)*(zoom_scale_new-zoom_scale + 1.0f);
-	zoom_scale = zoom_scale_new;
-	view = glm::lookAt(
-        eye_vec,
-        focus_vec,
-        up_vec
+	//std::cout << "zoom level: " << m_zoom_level << std::endl;
+	if (m_zoom_level > 5.0) m_zoom_level = 5.0; // limit the zoom in
+	if (m_zoom_level < 0.5) m_zoom_level = 0.5; // limit the zoom out
+	zoom_scale_new = 1/(m_zoom_level);
+	m_eye_vec = m_focus_vec + (m_eye_vec-m_focus_vec)*(zoom_scale_new-m_zoom_scale + 1.0f);
+	m_zoom_scale = zoom_scale_new;
+	m_view = glm::lookAt(
+        m_eye_vec,
+        m_focus_vec,
+        m_up_vec
     );
 }
 
+/*
 void Visualizer::onKeyboard(int key, int scancode, int action, int modifiers){
 	//std::cout << "KEYBOARD PRESS" << std::endl;
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){ // resets the view
@@ -856,13 +858,13 @@ void Visualizer::onShaders(){
 	// m_up_vec = glm::vec3(0.0f, 0.0f, 1.0f);
 	// calculate the eye z position so that it can view the whole scene
 	if (m_bounding_box.hi->x() - m_bounding_box.lo->x() > m_bounding_box.hi->y() - m_bounding_box.lo->y()){
-		m_eyez_init = 1.0*(m_bounding_box.hi->x()-m_bounding_box.lo->x()) + m_bounding_box.hi->z();
+		m_eyez_init = 0.2*(m_bounding_box.hi->x()-m_bounding_box.lo->x()) + m_bounding_box.hi->z();
 	}
 	else {
-		m_eyez_init = 1.0*(m_bounding_box.hi->y()-m_bounding_box.lo->y()) + m_bounding_box.hi->z();
+		m_eyez_init = 0.2*(m_bounding_box.hi->y()-m_bounding_box.lo->y()) + m_bounding_box.hi->z();
 	}
 
-	m_eyez_init = m_centroid.z() + 200;
+	// m_eyez_init = m_centroid.z()+10.0;
 
 	// std:: cout << "CALCULATED EYE_Z" << std::endl;
 
