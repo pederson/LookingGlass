@@ -862,7 +862,7 @@ void Visualizer::onShaders(){
 		m_eyez_init = 1.0*(m_bounding_box.hi->y()-m_bounding_box.lo->y()) + m_bounding_box.hi->z();
 	}
 
-	// m_eyez_init = m_centroid.z() + 0.5;
+	m_eyez_init = m_centroid.z() + 200;
 
 	// std:: cout << "CALCULATED EYE_Z" << std::endl;
 
@@ -886,7 +886,7 @@ void Visualizer::onShaders(){
 	glUniformMatrix4fv(m_uniView, 1, GL_FALSE, glm::value_ptr(m_view));
 
 	// m_proj = glm::perspective(0.785f, float(DEFAULT_WIDTH)/float(DEFAULT_HEIGHT), 0.000005f, 100000.0f);
-	m_proj = glm::perspective(0.785f, float(DEFAULT_WIDTH)/float(DEFAULT_HEIGHT), 0.000005f, 100000.0f);
+	m_proj = glm::perspective(1.785f, float(DEFAULT_WIDTH)/float(DEFAULT_HEIGHT), 0.000005f, 100000.0f);
 	m_uniProj = glGetUniformLocation(m_shaderProgram, "proj");
 	glUniformMatrix4fv(m_uniProj, 1, GL_FALSE, glm::value_ptr(m_proj));
 
