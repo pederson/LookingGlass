@@ -11,7 +11,7 @@ int main(int argc, char * argv[]){
 	LookingGlass::Visualizer * mywindow = new LookingGlass::Visualizer();
 
 	// geometric object
-	csg::CSGeometry2D obj(csg::Circle({-0.5, 0.0}, 0.5), csg::Circle({-0.25, 0.0}, 0.2), csg::UNION);
+	csg::CSGeometry2D obj(csg::Circle({-0.5, 0.0}, 0.5), csg::Circle({-0.25, 0.0}, 0.5), csg::XOR);
 	// csg::Circle obj = csg::Circle({-0.5, 0.0}, 0.5);
 	// csg::Rectangle obj = csg::Rectangle({0.0,0.0}, {0.1,0.3});
 	// csg::Ellipse obj = csg::Ellipse({0.0,0.0}, {0.5,0.3});
