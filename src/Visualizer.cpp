@@ -858,10 +858,10 @@ void Visualizer::onShaders(){
 	// m_up_vec = glm::vec3(0.0f, 0.0f, 1.0f);
 	// calculate the eye z position so that it can view the whole scene
 	if (m_bounding_box.hi->x() - m_bounding_box.lo->x() > m_bounding_box.hi->y() - m_bounding_box.lo->y()){
-		m_eyez_init = 0.2*(m_bounding_box.hi->x()-m_bounding_box.lo->x()) + m_bounding_box.hi->z();
+		m_eyez_init = 0.5*(m_bounding_box.hi->x()-m_bounding_box.lo->x()) + m_bounding_box.hi->z();
 	}
 	else {
-		m_eyez_init = 0.2*(m_bounding_box.hi->y()-m_bounding_box.lo->y()) + m_bounding_box.hi->z();
+		m_eyez_init = 0.5*(m_bounding_box.hi->y()-m_bounding_box.lo->y()) + m_bounding_box.hi->z();
 	}
 
 	// m_eyez_init = m_centroid.z()+10.0;
