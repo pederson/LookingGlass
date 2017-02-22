@@ -11,11 +11,15 @@ int main(int argc, char * argv[]){
 	LookingGlass::Visualizer * mywindow = new LookingGlass::Visualizer();
 
 	// geometric object
-	csg::CSGeometry2D obj(csg::Circle({-0.5, 0.0}, 0.5), csg::Circle({-0.25, 0.0}, 0.5), csg::XOR);
+	// csg::CSGeometry2D obj(csg::Circle({-0.5, 0.0}, 0.5), csg::Circle({-0.25, 0.0}, 0.5), csg::XOR);
 	// csg::Circle obj = csg::Circle({-0.5, 0.0}, 0.5);
 	// csg::Rectangle obj = csg::Rectangle({0.0,0.0}, {0.1,0.3});
 	// csg::Ellipse obj = csg::Ellipse({0.0,0.0}, {0.5,0.3});
 	// csg::Triangle obj = csg::Triangle({0.0,0.0}, {0.5,0.3}, {0.1, -0.3});
+
+	std::shared_ptr<csg::CSGeometry2D> obj1(new csg::CSGeometry2D(std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(2,2))), std::shared_ptr<csg::Primitive2D>(new csg::Circle(csg::Point<2>(0,0), 0.6)), csg::DIFFERENCE));
+	std::shared_ptr<csg::CSGeometry2D> obj2(new csg::CSGeometry2D(std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(0.3,1.8))), std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(1.8,0.3))), csg::UNION));
+	csg::CSGeometry2D obj = csg::CSGeometry2D(obj1, obj2, csg::UNION);
 
 	// get outline of objitive with 100 points
 	std::vector<csg::Hull<2>> hv = obj.get_outline(100);
