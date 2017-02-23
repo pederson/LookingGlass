@@ -24,6 +24,7 @@ int main(int argc, char * argv[]){
 	// get outline of objitive with 100 points
 	std::vector<csg::Hull<2>> hv = obj.get_outline(100);
 
+	unsigned int ct = 0;
 	for (auto j=0; j<hv.size(); j++){
 		csg::Hull<2> h = hv[j];
 
@@ -31,9 +32,11 @@ int main(int argc, char * argv[]){
 			mywindow->add_point(LookingGlass::OwnedPoint(h.points[i].x[0], h.points[i].x[1], 0.0));
 		}
 		// for (auto i=0; i<h.points.size()-1; i++){
-		// 	mywindow->set_edge_element(i, i+1);
+		// 	mywindow->set_edge_element(ct+i, ct+i+1);
 		// }
-		// mywindow->set_edge_element(h.points.size()-1, 0);
+		// mywindow->set_edge_element(ct+h.points.size()-1, ct);
+
+		// ct += h.points.size();
 	}
 	mywindow->calculate_bounds();
 
