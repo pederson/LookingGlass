@@ -46,17 +46,23 @@ int main(int argc, char * argv[]){
 	// csg::Delaunay dtri(rpts, 0);
 
 	// get geometry triangulation
-	csg::Triangulation<2> triang = obj.get_triangulation(500);
+	std::shared_ptr<csg::Triangulation<3>> triang = csg::read_STL(argv[1], 0);
+	// csg::Triangulation<2> triang = obj.get_triangulation(500);
 
-	for (auto i=0; i<triang.points.size(); i++){
-		mywindow->add_point(LookingGlass::OwnedPoint(triang.points[i].x[0], triang.points[i].x[1], 0.0));
+	for (auto i=0; i<triang->points.size(); i++){
+		// mywindow->add_point(LookingGlass::OwnedPoint(triang.points[i].x[0], triang.points[i].x[1], 0.0));
+		mywindow->add_point(LookingGlass::OwnedPoint(triang->points[i].x[0], triang->points[i].x[1], triang->points[i].x[2]));
 		mywindow->set_vertex_color(i, LookingGlass::OwnedColor(1.0,0.3,0.3,1.0));
 	}
-	for (auto i=0; i<triang.triangles.size(); i++){
-			mywindow->set_triangle_element(triang.triangles[i].x[0], triang.triangles[i].x[1], triang.triangles[i].x[2]);
+	for (auto i=0; i<triang->triangles.size(); i++){
+			// mywindow->set_triangle_element(triang->triangles[i].x[0], triang->triangles[i].x[1], triang->triangles[i].x[2]);
 			// mywindow->set_edge_element(triang.triangles[i].x[0], triang.triangles[i].x[1]);
 			// mywindow->set_edge_element(triang.triangles[i].x[1], triang.triangles[i].x[2]);
 			// mywindow->set_edge_element(triang.triangles[i].x[2], triang.triangles[i].x[0]);
+
+			mywindow->set_edge_element(triang->triangles[i].x[0], triang->triangles[i].x[1]);
+			mywindow->set_edge_element(triang->triangles[i].x[1], triang->triangles[i].x[2]);
+			mywindow->set_edge_element(triang->triangles[i].x[2], triang->triangles[i].x[0]);
 	}
 
 	// unsigned int ct = 0;
@@ -91,7 +97,7 @@ int main(int argc, char * argv[]){
 	// 	// ct += h.points.size();
 	// }
 
-	
+
 	mywindow->calculate_bounds();
 	mywindow->run();
 	//cout << "about to delete mywindow" << endl;
