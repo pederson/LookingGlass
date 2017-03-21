@@ -61,7 +61,9 @@ int main(int argc, char * argv[]){
 	
 	// draw the skeleton of the leaf nodes
 	csg::Box<2> motherbox(csg::Point2(0,0),csg::Point2(1,1));
+	// for (auto it=qtree.level_begin(6); it!=qtree.level_end(6); it++){
 	for (auto it=qtree.leaf_begin(); it!=qtree.leaf_end(); it++){
+
 		size_t lvl = qtree.getLevel(it->first);
 		csg::IntPoint2 off = qtree.getLevelOffset(it->first);
 		double rfac = pow(0.5,lvl);
