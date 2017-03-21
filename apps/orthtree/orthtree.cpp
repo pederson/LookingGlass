@@ -55,7 +55,7 @@ int main(int argc, char * argv[]){
 	};
 
 	CircleThing c1;
-	csg::Box<2> bounds(csg::Point2(-1,-1), csg::Point2(1,1));
+	csg::Box<2> bounds(csg::Point2(-1.2,-1.2), csg::Point2(1.2,1.2));
 	qtree.buildTree(7, bounds, c1, c1);
 	qtree.print_summary();
 	
