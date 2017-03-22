@@ -7,6 +7,7 @@
 #include "DrawablePoint.hpp"
 #include "DrawableBox.hpp"
 #include "OwnedPoint.hpp"
+#include "OwnedColor.hpp"
 
 // includes from c++ lib
 #include <iostream>
@@ -114,33 +115,33 @@ public:
 		m_edge_elems.push_back(nv+1);
 	}
 	// add a triangle (adds 3 vertices and a triangle element)
-	void add_triangle(const DrawablePoint & p1, const DrawablePoint & p2, const DrawablePoint & p3){
+	void add_triangle(const DrawablePoint & p1, const DrawablePoint & p2, const DrawablePoint & p3, const DrawableColor & c = OwnedColor()){
 		unsigned int nv = m_vertices.size()/7;
 		m_vertices.push_back(p1.x());
 		m_vertices.push_back(p1.y());
 		m_vertices.push_back(p1.z());
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
+		m_vertices.push_back(c.r());
+		m_vertices.push_back(c.g());
+		m_vertices.push_back(c.b());
+		m_vertices.push_back(c.a());
 		m_triangle_elems.push_back(nv);
 
 		m_vertices.push_back(p2.x());
 		m_vertices.push_back(p2.y());
 		m_vertices.push_back(p2.z());
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
+		m_vertices.push_back(c.r());
+		m_vertices.push_back(c.g());
+		m_vertices.push_back(c.b());
+		m_vertices.push_back(c.a());
 		m_triangle_elems.push_back(nv+1);
 
 		m_vertices.push_back(p3.x());
 		m_vertices.push_back(p3.y());
 		m_vertices.push_back(p3.z());
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
+		m_vertices.push_back(c.r());
+		m_vertices.push_back(c.g());
+		m_vertices.push_back(c.b());
+		m_vertices.push_back(c.a());
 		m_triangle_elems.push_back(nv+2);
 	}
 	// creates a point element associated to an existing vertex

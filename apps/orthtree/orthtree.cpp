@@ -22,7 +22,9 @@ int main(int argc, char * argv[]){
 	// csg::CSGeometry2D obj = csg::CSGeometry2D(obj1, obj2, csg::UNION);
 
 	// create the tree
-	csg::Quadtree<double> qtree;
+	static const std::size_t rfactor = 3;
+	// csg::Quadtree<double> qtree;
+	csg::Orthtree<2, rfactor, double> qtree;
 
 	// build a quadtree of doubles corresponding to a cirlce centered at 0,0 with radius 1
 	struct CircleThing{
@@ -56,7 +58,7 @@ int main(int argc, char * argv[]){
 
 	CircleThing c1;
 	csg::Box<2> bounds(csg::Point2(-1.2,-1.2), csg::Point2(1.2,1.2));
-	qtree.buildTree(7, bounds, c1, c1);
+	qtree.buildTree(5, bounds, c1, c1);
 	qtree.print_summary();
 	
 	// draw the skeleton of the leaf nodes
@@ -66,7 +68,7 @@ int main(int argc, char * argv[]){
 
 		size_t lvl = qtree.getLevel(it->first);
 		csg::IntPoint2 off = qtree.getLevelOffset(it->first);
-		double rfac = pow(0.5,lvl);
+		double rfac = pow(1.0/static_cast<double>(rfactor),lvl);
 		csg::Box<2> lvlbox(motherbox.lo*rfac,motherbox.hi*rfac);
 
 		csg::Box<2> mybox(rfac*off, rfac*off+lvlbox.hi);
@@ -75,10 +77,19 @@ int main(int argc, char * argv[]){
 		csg::Point2 br(mybox.hi.x[0],mybox.lo.x[1]);
 		csg::Point2 tr(mybox.hi.x[0],mybox.hi.x[1]);
 
-		mywindow->add_edge(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0));
-		mywindow->add_edge(LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0));
-		mywindow->add_edge(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0));
-		mywindow->add_edge(LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0));
+		// mywindow->add_edge(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0));
+		// mywindow->add_edge(LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0));
+		// mywindow->add_edge(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0));
+		// mywindow->add_edge(LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0));
+		
+		if (*(it->second.mVal) > 0.5){
+			mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedColor(0.5,0.5,0.5,1));
+			mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedColor(0.5,0.5,0.5,1));
+		}
+		else{
+			mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedColor(0.0,0.0,0.0,0));
+			mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedColor(0.0,0.0,0.0,0));
+		}
 	}
 
 	mywindow->calculate_bounds();
