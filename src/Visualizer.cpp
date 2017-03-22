@@ -990,7 +990,7 @@ void Visualizer::draw_triangles(){
 
     // Draw triangles
 	glDrawElements(GL_TRIANGLES, m_triangle_elems.size() , GL_UNSIGNED_INT, (void *)(0));
-	
+
     glBindVertexArray(0);
 	return;
 }
