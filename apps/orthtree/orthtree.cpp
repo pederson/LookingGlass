@@ -28,8 +28,10 @@ int main(int argc, char * argv[]){
 
 	// build a quadtree of doubles corresponding to a cirlce centered at 0,0 with radius 1
 	struct CircleThing{
-		double rad = 1.0;
+		double rad = 1.0, radsmall = 0.1;
 		csg::Point2 cen = csg::Point2(0,0);
+		double coarsesize = 0.05;
+		double finesize = 0.003;
 
 		double getValue(csg::Box<2> bx) const{
 			csg::Point2 p = 0.5*(bx.lo + bx.hi);
@@ -37,11 +39,17 @@ int main(int argc, char * argv[]){
 		}
 
 		double getValue(const csg::Point2 & p) const{
-			if (csg::Point2::distsq(p,cen) > rad*rad) return 0.0;
+			if (csg::Point2::distsq(p,cen) > rad*rad || csg::Point2::distsq(p,cen) < radsmall*radsmall) return 0.0;
 			return 1.0;
 		}
 
+		// if not uniform, will refine box more
 		bool isUniform(csg::Box<2> bx) const{
+			csg::Point2 bxsize = bx.hi-bx.lo;
+			if ((bx.hi.x[1] > 1.0 && bx.lo.x[1] > 1.0) || (bx.hi.x[1] < -1.0 && bx.lo.x[1] < -1.0)) return true;
+			if (bxsize.x[0] > coarsesize && bxsize.x[1] > coarsesize) return false;
+			if (bxsize.x[0] < finesize && bxsize.x[1] < finesize) return true;
+
 			csg::Point2 tl = bx.lo; tl.x[1] = bx.hi.x[1];
 			csg::Point2 br = bx.hi; br.x[1] = bx.lo.x[1];
 			csg::Point2 c = 0.5*(bx.hi+bx.lo);
@@ -57,9 +65,9 @@ int main(int argc, char * argv[]){
 	};
 
 	CircleThing c1;
-	csg::Box<2> bounds(csg::Point2(-1.2,-1.2), csg::Point2(1.2,1.2));
-	qtree.buildTree(5, bounds, c1, c1);
-	qtree.buildLevelBoundary(4, 2.0);
+	csg::Box<2> bounds(csg::Point2(-2.0,-2.0), csg::Point2(2.0,2.0));
+	qtree.buildTree(9, bounds, c1, c1);
+	// qtree.buildLevelBoundary(6, 2.0);
 	qtree.print_summary();
 	
 	// std::cout << "qtree.leaf_end()->first: " << qtree.leaf_end()->first << std::endl;
@@ -68,6 +76,7 @@ int main(int argc, char * argv[]){
 	csg::Box<2> motherbox(csg::Point2(0,0),csg::Point2(1,1));
 	// for (auto it=qtree.level_begin(5); it!=qtree.level_end(5); it++){
 	for (auto it=qtree.leaf_begin(); it!=qtree.leaf_end(); it++){
+	// for (auto it=qtree.boundary_begin(5); it!=qtree.boundary_end(5); it++){
 		// std::cout << "key: " << it->first << std::endl;
 		size_t lvl = qtree.getLevel(it->first);
 		csg::IntPoint2 off = qtree.getLevelOffset(it->first);
