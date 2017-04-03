@@ -24,6 +24,7 @@ struct rgb{
   float B;
 };
 
+
 class ColorRamp{
 public:
 
