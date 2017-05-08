@@ -5,7 +5,7 @@ PROJECT(orthtree)
 
 #SET(CMAKE_CXX_COMPILER #"${PETSC_DIR}/${PETSC_ARCH}/bin/mpicxx")
 SET(CMAKE_CXX_COMPILER "/usr/bin/clang++-3.8")
-SET(CMAKE_CXX_FLAGS "-std=c++11")
+SET(CMAKE_CXX_FLAGS "-std=c++14 -stdlib=libc++")
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 MESSAGE(STATUS "  *************** ")
 FOREACH(item ${CMAKE_MODULE_PATH})

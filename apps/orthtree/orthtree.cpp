@@ -25,11 +25,12 @@ int main(int argc, char * argv[]){
 	static const std::size_t rfactor = 3;
 	// csg::Quadtree<double> qtree;
 	csg::Orthtree<2, rfactor, double> qtree;
-
+	
 	// build a quadtree of doubles corresponding to a cirlce centered at 0,0 with radius 1
 	struct CircleThing{
 		double rad = 1.0, radsmall = 0.1;
 		csg::Point2 cen = csg::Point2(0,0);
+		csg::Box<2> bounds = {csg::Point2(-1,-1), csg::Point2(1,1)};
 		double coarsesize = 0.05;
 		double finesize = 0.003;
 
@@ -39,17 +40,11 @@ int main(int argc, char * argv[]){
 		}
 
 		double getValue(const csg::Point2 & p) const{
-			if (csg::Point2::distsq(p,cen) > rad*rad || csg::Point2::distsq(p,cen) < radsmall*radsmall) return 0.0;
+			if (csg::Point2::distsq(p,cen) > rad*rad) return 0.0;
 			return 1.0;
 		}
 
-		// if not uniform, will refine box more
 		bool isUniform(csg::Box<2> bx) const{
-			csg::Point2 bxsize = bx.hi-bx.lo;
-			if ((bx.hi.x[1] > 1.0 && bx.lo.x[1] > 1.0) || (bx.hi.x[1] < -1.0 && bx.lo.x[1] < -1.0)) return true;
-			if (bxsize.x[0] > coarsesize && bxsize.x[1] > coarsesize) return false;
-			if (bxsize.x[0] < finesize && bxsize.x[1] < finesize) return true;
-
 			csg::Point2 tl = bx.lo; tl.x[1] = bx.hi.x[1];
 			csg::Point2 br = bx.hi; br.x[1] = bx.lo.x[1];
 			csg::Point2 c = 0.5*(bx.hi+bx.lo);
@@ -62,27 +57,44 @@ int main(int argc, char * argv[]){
 				getValue(bx.lo) == getValue(c)) return true;
 			return false;
 		}
+
+		bool isUniform(int key) const{return isUniform(getBox(key));};
+
+		double getValue(int key) const{return getValue(getBox(key));};
+
+		std::size_t getSubdomain(int key) const{return 0;};
+
+		csg::Box<2> getBox(int key) const{
+			auto lvl = csg::BruteForceDecoder<2,rfactor,int>::decodeLevel(key);
+			double rf = pow(rfactor,lvl);
+			csg::Point<2> boxsize = 1.0/static_cast<double>(rf)*(bounds.hi-bounds.lo);
+			csg::IntPoint<2> off = csg::BruteForceDecoder<2,rfactor,int>::getOffsetWithinLevel(key);
+			csg::Point<2> newlo = bounds.lo+boxsize*off;
+			csg::Box<2> rbox(newlo, newlo+boxsize);
+			return rbox;
+		}
 	};
 
 	CircleThing c1;
 	csg::Box<2> bounds(csg::Point2(-2.0,-2.0), csg::Point2(2.0,2.0));
-	qtree.buildTree(9, bounds, c1, c1);
+	qtree.buildTree(5, c1, c1, c1, 0, 0);
 	// qtree.buildLevelBoundary(6, 2.0);
-	qtree.annexLevelBoundary<3>();
-	qtree.reassignLevelBoundary<3>(2.0);
+	// qtree.annexLevelBoundary<3>();
+	// qtree.reassignLevelBoundary<3>(2.0);
 	qtree.print_summary();
 	
 	// std::cout << "qtree.leaf_end()->first: " << qtree.leaf_end()->first << std::endl;
 	// throw -1;
 	// draw the skeleton of the leaf nodes
 	csg::Box<2> motherbox(csg::Point2(0,0),csg::Point2(1,1));
-	for (auto it=qtree.level_begin<3>(); it!=qtree.level_end<3>(); it++){
+	// for (auto it=qtree.level_begin(4); it!=qtree.level_end(4); it++){
+	for (auto it=qtree.subdomain_begin(5,0); it!=qtree.subdomain_end(5,0); it++){
 	// for (auto it=qtree.leaf_begin(); it!=qtree.leaf_end(); it++){
 	// for (auto it=qtree.boundary_begin<3>(); it!=qtree.boundary_end<3>(); it++){
 		
 		// std::cout << "key: " << it->first << std::endl;
 		size_t lvl = qtree.getLevel(it->first);
-		csg::IntPoint2 off = qtree.getLevelOffset(it->first);
+		csg::IntPoint2 off = csg::BruteForceDecoder<2,rfactor,int>::getOffsetWithinLevel(it->first);
 		double rfac = pow(1.0/static_cast<double>(rfactor),lvl);
 		csg::Box<2> lvlbox(motherbox.lo*rfac,motherbox.hi*rfac);
 
@@ -92,23 +104,23 @@ int main(int argc, char * argv[]){
 		csg::Point2 br(mybox.hi.x[0],mybox.lo.x[1]);
 		csg::Point2 tr(mybox.hi.x[0],mybox.hi.x[1]);
 
-		// mywindow->add_edge(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0));
-		// mywindow->add_edge(LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0));
-		// mywindow->add_edge(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0));
-		// mywindow->add_edge(LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0));
+		mywindow->add_edge(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0));
+		mywindow->add_edge(LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0));
+		mywindow->add_edge(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0));
+		mywindow->add_edge(LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0));
 		
-		if (*(it->second.mVal) > 1.5){
-			mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0001), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0001), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0001), LookingGlass::OwnedColor(1,0,0,1));
-			mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0001), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0001), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0001), LookingGlass::OwnedColor(1,0,0,1));
-		}
-		else if (*(it->second.mVal) > 0.5){
-			mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedColor(0.5,0.5,0.5,0.5));
-			mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedColor(0.5,0.5,0.5,0.5));
-		}
-		else{
-			mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedColor(0.0,0.0,0.0,0.5));
-			mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedColor(0.0,0.0,0.0,0.5));
-		}
+		// if (it->second.mVal > 1.5){
+		// 	mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0001), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0001), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0001), LookingGlass::OwnedColor(1,0,0,1));
+		// 	mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0001), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0001), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0001), LookingGlass::OwnedColor(1,0,0,1));
+		// }
+		// else if (it->second.mVal > 0.5){
+		// 	mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedColor(0.5,0.5,0.5,0.5));
+		// 	mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedColor(0.5,0.5,0.5,0.5));
+		// }
+		// else{
+		// 	mywindow->add_triangle(LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedPoint(bl.x[0],bl.x[1], 0.0), LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedColor(0.0,0.0,0.0,0.5));
+		// 	mywindow->add_triangle(LookingGlass::OwnedPoint(br.x[0],br.x[1], 0.0), LookingGlass::OwnedPoint(tr.x[0],tr.x[1], 0.0), LookingGlass::OwnedPoint(tl.x[0],tl.x[1], 0.0), LookingGlass::OwnedColor(0.0,0.0,0.0,0.5));
+		// }
 	}
 
 	mywindow->calculate_bounds();
