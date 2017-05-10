@@ -33,6 +33,7 @@ int main(int argc, char * argv[]){
 		csg::Box<2> bounds = {csg::Point2(-1,-1), csg::Point2(1,1)};
 		double coarsesize = 0.05;
 		double finesize = 0.003;
+		csg::IntegralKeyDecoder<2,rfactor,int> ikd;
 
 		double getValue(csg::Box<2> bx) const{
 			csg::Point2 p = 0.5*(bx.lo + bx.hi);
@@ -65,10 +66,10 @@ int main(int argc, char * argv[]){
 		std::size_t getSubdomain(int key) const{return 0;};
 
 		csg::Box<2> getBox(int key) const{
-			auto lvl = csg::BruteForceDecoder<2,rfactor,int>::decodeLevel(key);
+			auto lvl = ikd.getLevel(key);
 			double rf = pow(rfactor,lvl);
 			csg::Point<2> boxsize = 1.0/static_cast<double>(rf)*(bounds.hi-bounds.lo);
-			csg::IntPoint<2> off = csg::BruteForceDecoder<2,rfactor,int>::getOffsetWithinLevel(key);
+			csg::IntPoint<2> off = ikd.getOffsetWithinLevel(key);
 			csg::Point<2> newlo = bounds.lo+boxsize*off;
 			csg::Box<2> rbox(newlo, newlo+boxsize);
 			return rbox;
@@ -77,24 +78,24 @@ int main(int argc, char * argv[]){
 
 	CircleThing c1;
 	csg::Box<2> bounds(csg::Point2(-2.0,-2.0), csg::Point2(2.0,2.0));
-	qtree.buildTree(5, c1, c1, c1, 0, 0);
+	qtree.buildTree(5, c1, c1, 0, 0);
 	// qtree.buildLevelBoundary(6, 2.0);
 	// qtree.annexLevelBoundary<3>();
 	// qtree.reassignLevelBoundary<3>(2.0);
-	qtree.print_summary();
+	// qtree.print_summary();
 	
 	// std::cout << "qtree.leaf_end()->first: " << qtree.leaf_end()->first << std::endl;
 	// throw -1;
 	// draw the skeleton of the leaf nodes
 	csg::Box<2> motherbox(csg::Point2(0,0),csg::Point2(1,1));
 	// for (auto it=qtree.level_begin(4); it!=qtree.level_end(4); it++){
-	for (auto it=qtree.subdomain_begin(5,0); it!=qtree.subdomain_end(5,0); it++){
+	// for (auto it=qtree.subdomain_begin(5,0); it!=qtree.subdomain_end(5,0); it++){
 	// for (auto it=qtree.leaf_begin(); it!=qtree.leaf_end(); it++){
-	// for (auto it=qtree.boundary_begin<3>(); it!=qtree.boundary_end<3>(); it++){
+	for (auto it=qtree.boundary_begin(4); it!=qtree.boundary_end(4); it++){
 		
 		// std::cout << "key: " << it->first << std::endl;
 		size_t lvl = qtree.getLevel(it->first);
-		csg::IntPoint2 off = csg::BruteForceDecoder<2,rfactor,int>::getOffsetWithinLevel(it->first);
+		csg::IntPoint2 off = c1.ikd.getOffsetWithinLevel(it->first);
 		double rfac = pow(1.0/static_cast<double>(rfactor),lvl);
 		csg::Box<2> lvlbox(motherbox.lo*rfac,motherbox.hi*rfac);
 
