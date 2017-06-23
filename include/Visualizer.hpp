@@ -94,24 +94,24 @@ public:
 		m_point_elems.push_back(nv);
 	}
 	// add an edge (adds 2 vertices and an edge element)
-	void add_edge(const DrawablePoint & p1, const DrawablePoint & p2){
+	void add_edge(const DrawablePoint & p1, const DrawablePoint & p2, const DrawableColor & c = OwnedColor()){
 		unsigned int nv = m_vertices.size()/7;
 		m_vertices.push_back(p1.x());
 		m_vertices.push_back(p1.y());
 		m_vertices.push_back(p1.z());
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
+		m_vertices.push_back(c.r());
+		m_vertices.push_back(c.g());
+		m_vertices.push_back(c.b());
+		m_vertices.push_back(c.a());
 		m_edge_elems.push_back(nv);
 
 		m_vertices.push_back(p2.x());
 		m_vertices.push_back(p2.y());
 		m_vertices.push_back(p2.z());
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
-		m_vertices.push_back(1.0);
+		m_vertices.push_back(c.r());
+		m_vertices.push_back(c.g());
+		m_vertices.push_back(c.b());
+		m_vertices.push_back(c.a());
 		m_edge_elems.push_back(nv+1);
 	}
 	// add a triangle (adds 3 vertices and a triangle element)
@@ -352,11 +352,12 @@ protected:
 	virtual void onKeyboard(int key, int scancode, int action, int modifiers);
 	virtual void onCursorPosition(double xpos, double ypos);
 
-	/*
+	
 	// derived callbacks defined by me
 	virtual void onMouseLeftDrag(double xpos, double ypos);
 	virtual void onMouseRightDrag(double xpos, double ypos);
 	virtual void onMouseMiddleDrag(double xpos, double ypos);
+	/*
 	virtual void onKeyDown(unsigned char key, int x, int y);
 	virtual void onKeyUp(unsigned char key, int x, int y);
 	virtual void onKeySpace();
@@ -366,6 +367,7 @@ protected:
 	virtual void SetFullscreen(bool bFullscreen);
 	virtual void cycleColorRamp();
 	*/
+	
 	virtual void recalcCamera();
 
 

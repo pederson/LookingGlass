@@ -17,7 +17,7 @@ public:
 	OwnedColor()
 	: m_r(1), m_g(1), m_b(1), m_a(1) {};
 
-	OwnedColor(double cr, double cg, double cb, double ca)
+	constexpr OwnedColor(double cr, double cg, double cb, double ca)
 	: m_r(cr), m_g(cg), m_b(cb), m_a(ca) {};
 
 	double r() const {return m_r;};
@@ -31,6 +31,12 @@ protected:
 	double m_b;
 	double m_a;
 };
+
+
+namespace color{
+	constexpr OwnedColor black(0.0, 0.0, 0.0, 1.0);
+}
+
 }
 
 #endif

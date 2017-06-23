@@ -146,22 +146,6 @@ void Visualizer::set_test_case(){
 
 
 void Visualizer::onMouseClick(int button, int action, int modifiers){
-
-}
-
-// void Visualizer::onMouseWheel(double xoffset, double yoffset){
-
-// }
-
-void Visualizer::onKeyboard(int key, int scancode, int action, int modifiers){
-
-}
-
-void Visualizer::onCursorPosition(double xpos, double ypos){
-}
-
-/*
-void Visualizer::onMouseClick(int button, int action, int modifiers){
 	bool state;
 	if (action == GLFW_PRESS) state = true;
 	else if(action == GLFW_RELEASE) state = false;
@@ -170,31 +154,31 @@ void Visualizer::onMouseClick(int button, int action, int modifiers){
 
 	switch (button){
 		case GLFW_MOUSE_BUTTON_LEFT :
-			left_mouse_engaged = state;
+			m_left_mouse_engaged = state;
 			if (state) {
-				glfwGetCursorPos(m_window_ptr, &x_upon_click, &y_upon_click);
-				new_eye = eye_vec;
+				glfwGetCursorPos(m_window_ptr, &m_x_upon_click, &m_y_upon_click);
+				m_new_eye = m_eye_vec;
 			}
 			else {
-				eye_vec = new_eye;
+				m_eye_vec = m_new_eye;
 				recalcCamera();
 			}
 
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE :
-			middle_mouse_engaged = state;
+			m_middle_mouse_engaged = state;
 			//std::cout << "middle mouse click " << (state? "on":"off")  << std::endl;
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT :
-			right_mouse_engaged = state;
+			m_right_mouse_engaged = state;
 			if (state) {
-				glfwGetCursorPos(m_window_ptr, &x_upon_click, &y_upon_click);
-				new_eye = eye_vec;
-				new_focus = focus_vec;
+				glfwGetCursorPos(m_window_ptr, &m_x_upon_click, &m_y_upon_click);
+				m_new_eye = m_eye_vec;
+				m_new_focus = m_focus_vec;
 			}
 			else {
-				eye_vec = new_eye;
-				focus_vec = new_focus;
+				m_eye_vec = m_new_eye;
+				m_focus_vec = m_new_focus;
 				recalcCamera();
 			}
 			break;
@@ -203,7 +187,7 @@ void Visualizer::onMouseClick(int button, int action, int modifiers){
 	}
 	return;
 }
-*/
+
 
 void Visualizer::onMouseWheel(double xoffset, double yoffset){
 	//std::cout << "MOUSE WHEEL: xoffset: " << xoffset << " yoffset: " << yoffset << std::endl;
@@ -217,9 +201,9 @@ void Visualizer::onMouseWheel(double xoffset, double yoffset){
 
 	}
 	//std::cout << "zoom level: " << m_zoom_level << std::endl;
-	if (m_zoom_level > 5.0) m_zoom_level = 5.0; // limit the zoom in
+	if (m_zoom_level > 10.0) m_zoom_level = 10.0; // limit the zoom in
 	if (m_zoom_level < 0.5) m_zoom_level = 0.5; // limit the zoom out
-	zoom_scale_new = 1/(m_zoom_level);
+	zoom_scale_new = 5.0/(m_zoom_level);
 	m_eye_vec = m_focus_vec + (m_eye_vec-m_focus_vec)*(zoom_scale_new-m_zoom_scale + 1.0f);
 	m_zoom_scale = zoom_scale_new;
 	m_view = glm::lookAt(
@@ -229,28 +213,29 @@ void Visualizer::onMouseWheel(double xoffset, double yoffset){
     );
 }
 
-/*
+
 void Visualizer::onKeyboard(int key, int scancode, int action, int modifiers){
-	//std::cout << "KEYBOARD PRESS" << std::endl;
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){ // resets the view
-		onKeySpace();
-	}
-	else if (key == GLFW_KEY_C && action == GLFW_PRESS){
-		onKeyC();
-	}
-	else if (key == GLFW_KEY_F && action == GLFW_PRESS){
-		onKeyF();
-	}
+	// //std::cout << "KEYBOARD PRESS" << std::endl;
+	// if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){ // resets the view
+	// 	onKeySpace();
+	// }
+	// else if (key == GLFW_KEY_C && action == GLFW_PRESS){
+	// 	onKeyC();
+	// }
+	// else if (key == GLFW_KEY_F && action == GLFW_PRESS){
+	// 	onKeyF();
+	// }
 }
 
 void Visualizer::onCursorPosition(double xpos, double ypos){
-	if (left_mouse_engaged) onMouseLeftDrag(xpos, ypos);
-	else if(right_mouse_engaged) onMouseRightDrag(xpos, ypos);
-	else if(middle_mouse_engaged) onMouseMiddleDrag(xpos, ypos);
+	if(m_left_mouse_engaged) onMouseLeftDrag(xpos, ypos);
+	else if(m_right_mouse_engaged) onMouseRightDrag(xpos, ypos);
+	else if(m_middle_mouse_engaged) onMouseMiddleDrag(xpos, ypos);
 }
 
 //DYLAN_TODO: do this using quaternions instead
 void Visualizer::onMouseLeftDrag(double xpos, double ypos){
+	/*
 	double new_x_pos, new_y_pos;
 	int width, height;
 	glm::vec3 rot_vec, in_world_ip;
@@ -269,9 +254,11 @@ void Visualizer::onMouseLeftDrag(double xpos, double ypos){
 
 	new_eye = focus_vec +  glm::rotate((eye_vec-focus_vec), rotdeg, rot_vec);
 	view = glm::lookAt(new_eye, focus_vec, up_vec);
+	*/
 }
 
 void Visualizer::onMouseRightDrag(double xpos, double ypos){
+	
 	double new_x_pos, new_y_pos;
 	int width, height;
 	glm::vec3 in_plane, in_world_ip;
@@ -282,41 +269,45 @@ void Visualizer::onMouseRightDrag(double xpos, double ypos){
 	glfwGetCursorPos(m_window_ptr, &new_x_pos, &new_y_pos);
 
 
-	pan_scale = ((new_x_pos-x_upon_click)*(new_x_pos-x_upon_click) + (new_y_pos-y_upon_click)*(new_y_pos-y_upon_click))/(width*width + height*height)*((xmax-xmin)*(xmax-xmin)+(ymax-ymin)*(ymax-ymin));
+	pan_scale = ((new_x_pos-m_x_upon_click)*(new_x_pos-m_x_upon_click) + 
+				(new_y_pos-m_y_upon_click)*(new_y_pos-m_y_upon_click))
+				/(width*width + height*height)*((m_bounding_box.hi->x()-m_bounding_box.lo->x())*(m_bounding_box.hi->x()-m_bounding_box.lo->x())+(m_bounding_box.hi->y()-m_bounding_box.lo->y())*(m_bounding_box.hi->y()-m_bounding_box.lo->y()));
+				// /(width*width + height*height)*((xmax-xmin)*(xmax-xmin)+(ymax-ymin)*(ymax-ymin));
 	//std::cout << "pan scale: " << pan_scale << std::endl;
 
-	in_world_ip = float(new_x_pos-x_upon_click)*-camera_side + float(new_y_pos-y_upon_click)*camera_up;
+	in_world_ip = float(new_x_pos-m_x_upon_click)*-m_camera_side + float(new_y_pos-m_y_upon_click)*m_camera_up;
 	in_world_ip = glm::normalize(in_world_ip);
 
 	//std::cout << "about to translate " << std::endl;
-	new_eye = eye_vec + pan_scale*in_world_ip;
-	new_focus = focus_vec + pan_scale*in_world_ip;
-	view = glm::lookAt(new_eye, new_focus, up_vec);
+	m_new_eye = m_eye_vec + pan_scale*in_world_ip;
+	m_new_focus = m_focus_vec + pan_scale*in_world_ip;
+	m_view = glm::lookAt(m_new_eye, m_new_focus, m_up_vec);
 	//std::cout << "finished translating" << std::endl;
+	
 }
 
 void Visualizer::onMouseMiddleDrag(double xpos, double ypos){
 	//std::cout << "dragging middle mouse button" << std::endl;
 }
 
-void Visualizer::onKeyDown(unsigned char key, int x, int y){
-	std::cout << "Pressed Key with unsigned char : " << key << std::endl;
-	return;
-}
+// void Visualizer::onKeyDown(unsigned char key, int x, int y){
+// 	std::cout << "Pressed Key with unsigned char : " << key << std::endl;
+// 	return;
+// }
 
-void Visualizer::onKeyUp(unsigned char key, int x, int y){
-	std::cout << "Released Key with unsigned char: " << key << std::endl;
-	return;
-}
+// void Visualizer::onKeyUp(unsigned char key, int x, int y){
+// 	std::cout << "Released Key with unsigned char: " << key << std::endl;
+// 	return;
+// }
 
-void Visualizer::onReshape(int new_width, int new_height){
-	std::cout << "reshaping" << std::endl;
-}
+// void Visualizer::onReshape(int new_width, int new_height){
+// 	std::cout << "reshaping" << std::endl;
+// }
 
-void Visualizer::SetFullscreen(bool bFullscreen){
+// void Visualizer::SetFullscreen(bool bFullscreen){
 
-}
-*/
+// }
+
 
 void Visualizer::recalcCamera(){
 	m_camera_side = glm::normalize(glm::cross(m_focus_vec - m_eye_vec, m_up_vec - m_eye_vec + m_focus_vec));
