@@ -1,16 +1,38 @@
 #include "../../include/Visualizer.hpp"
 #include "../../include/OwnedPoint.hpp"
 #include "../../include/OwnedColor.hpp"
+#include <tinyxml2.h>
 
 #include <random>
 
 #include <csg.h>
 
+using namespace csg;
 // use cmake to compile
 
 int main(int argc, char * argv[]){
 	// declare vars
 	LookingGlass::Visualizer * mywindow = new LookingGlass::Visualizer();
+
+
+
+	std::shared_ptr<Primitive2D> obj = csg::read2D(argv[argc-1]);
+	// double a = 0.5;
+	// Circle cir({0,0}, a);
+	// csg::CSGTree<Primitive2D> o1(cir);
+	
+	// csg::CSGTree<Primitive2D> obj(Circle({0,2*a}, 2*a));
+	// obj.push_back(discrete_rotation_symmetry(o1, Point<2>(0, 2*a), 5), DIFFERENCE);
+	// obj.push_back(discrete_rotation_symmetry(Circle({0,0}, 0.4*a), Point<2>(0, 2*a), 5), UNION);
+
+	obj->print_summary();
+	// obj.push_back(Rectangle({0,0}, {9*a, a}), INTERSECT);
+	// csg::CSGTree<Primitive2D> obj(Circle({0,0}, a));
+	// obj.push_back(Circle({0,0}, 0.8*a), DIFFERENCE);
+	// obj.push_back(Rectangle({0,0}, {3*a, 0.2*a}), DIFFERENCE);
+	// obj.push_back(Rectangle({0,0}, {0.2*a, 2*a}), UNION);
+	// obj.push_back(Rectangle({0,0}, {1*a, 0.1*a}), DIFFERENCE);
+	
 
 	// geometric object
 	// csg::CSGeometry2D obj(csg::Circle({-0.5, 0.0}, 0.5), csg::Circle({-0.25, 0.0}, 0.5), csg::XOR);
@@ -19,10 +41,11 @@ int main(int argc, char * argv[]){
 	// csg::Ellipse obj = csg::Ellipse({0.0,0.0}, {0.5,0.3});
 	// csg::Triangle obj = csg::Triangle({0.0,0.0}, {0.5,0.3}, {0.1, -0.3});
 
-	std::shared_ptr<csg::CSGeometry2D> obj1(new csg::CSGeometry2D(std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(2,2))), std::shared_ptr<csg::Primitive2D>(new csg::Circle(csg::Point<2>(0,0), 0.6)), csg::DIFFERENCE));
-	std::shared_ptr<csg::CSGeometry2D> obj2(new csg::CSGeometry2D(std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(0.3,1.8))), std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(1.8,0.3))), csg::UNION));
-	std::shared_ptr<csg::CSGeometry2D> obj3(new csg::CSGeometry2D(obj2, std::shared_ptr<csg::Primitive2D>(new csg::Circle(csg::Point<2>(0,0),0.1)), csg::DIFFERENCE));
-	csg::CSGeometry2D obj = csg::CSGeometry2D(obj1, obj3, csg::UNION);
+	// std::shared_ptr<csg::CSGeometry2D> obj1(new csg::CSGeometry2D(std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(2,2))), std::shared_ptr<csg::Primitive2D>(new csg::Circle(csg::Point<2>(0,0), 0.6)), csg::DIFFERENCE));
+	// std::shared_ptr<csg::CSGeometry2D> obj2(new csg::CSGeometry2D(std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(0.3,1.8))), std::shared_ptr<csg::Primitive2D>(new csg::Rectangle(csg::Point<2>(0,0),csg::Point<2>(1.8,0.3))), csg::UNION));
+	// std::shared_ptr<csg::CSGeometry2D> obj3(new csg::CSGeometry2D(obj2, std::shared_ptr<csg::Primitive2D>(new csg::Circle(csg::Point<2>(0,0),0.1)), csg::DIFFERENCE));
+	// csg::CSGeometry2D obj = csg::CSGeometry2D(obj1, obj3, csg::UNION);
+	
 	// csg::CSGeometry2D obj1(csg::Circle({-0.5, 0.5}, 0.3), csg::Rectangle({0.1,0.0},{0.3,0.6}), csg::UNION);
 	// csg::CSGeometry2D obj2(csg::Ellipse({-0.5,-0.5}, {0.3, 0.1}), csg::Triangle({0.0, -0.8}, {0.2, -0.7}, {0.0, -0.5}), csg::UNION);
 	// csg::CSGeometry2D obj = csg::CSGeometry2D(obj1, obj2, csg::UNION);
@@ -46,23 +69,29 @@ int main(int argc, char * argv[]){
 	// csg::Delaunay dtri(rpts, 0);
 
 	// get geometry triangulation
-	std::shared_ptr<csg::Triangulation<3>> triang = csg::read_STL(argv[1], 0);
-	// csg::Triangulation<2> triang = obj.get_triangulation(500);
+	// std::shared_ptr<csg::Triangulation<3>> triang = csg::read_STL(argv[1], 0);
+	std::shared_ptr<csg::Triangulation<2>> triang = std::make_shared<csg::Triangulation<2>>(obj->get_triangulation(500));
 
+	rgb col = Color::DodgerBlue();
+	double alpha = 0.9;
 	for (auto i=0; i<triang->points.size(); i++){
-		// mywindow->add_point(LookingGlass::OwnedPoint(triang.points[i].x[0], triang.points[i].x[1], 0.0));
-		mywindow->add_point(LookingGlass::OwnedPoint(triang->points[i].x[0], triang->points[i].x[1], triang->points[i].x[2]));
-		mywindow->set_vertex_color(i, LookingGlass::OwnedColor(1.0,0.3,0.3,1.0));
+		mywindow->add_point(LookingGlass::OwnedPoint(triang->points[i].x[0], triang->points[i].x[1], 0.0));
+		// mywindow->add_point(LookingGlass::OwnedPoint(triang->points[i].x[0], triang->points[i].x[1], triang->points[i].x[2]));
+		mywindow->set_vertex_color(i, LookingGlass::OwnedColor(col.R, col.G, col.B, alpha));
 	}
 	for (auto i=0; i<triang->triangles.size(); i++){
-			// mywindow->set_triangle_element(triang->triangles[i].x[0], triang->triangles[i].x[1], triang->triangles[i].x[2]);
+			// display the object as triangles
+			mywindow->set_triangle_element(triang->triangles[i].x[0], triang->triangles[i].x[1], triang->triangles[i].x[2]);
+			
+			// display the "skeleton" of the object ... the edges
+			// mywindow->set_edge_element(triang->triangles[i].x[0], triang->triangles[i].x[1]);
+			// mywindow->set_edge_element(triang->triangles[i].x[1], triang->triangles[i].x[2]);
+			// mywindow->set_edge_element(triang->triangles[i].x[2], triang->triangles[i].x[0]);
+	
 			// mywindow->set_edge_element(triang.triangles[i].x[0], triang.triangles[i].x[1]);
 			// mywindow->set_edge_element(triang.triangles[i].x[1], triang.triangles[i].x[2]);
 			// mywindow->set_edge_element(triang.triangles[i].x[2], triang.triangles[i].x[0]);
 
-			mywindow->set_edge_element(triang->triangles[i].x[0], triang->triangles[i].x[1]);
-			mywindow->set_edge_element(triang->triangles[i].x[1], triang->triangles[i].x[2]);
-			mywindow->set_edge_element(triang->triangles[i].x[2], triang->triangles[i].x[0]);
 	}
 
 	// unsigned int ct = 0;

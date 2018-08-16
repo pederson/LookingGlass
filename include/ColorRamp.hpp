@@ -64,6 +64,35 @@ public:
   static rgb Black() {return {0.0, 0.0, 0.0};};;
   static rgb Brown() {return {102.0/255.0, 51.0/255.0, 0.0};};;
 
+
+
+
+  // some blues
+  static rgb AliceBlue() {return {240.0/255.0, 248.0/255.0, 255.0/255.0};};
+  static rgb Lavender() {return {230.0/255.0, 230.0/255.0, 250.0/255.0};};
+  static rgb PowderBlue() {return {176.0/255.0, 224.0/255.0, 230.0/255.0};};
+  static rgb LightBlue() {return {173.0/255.0, 216.0/255.0, 230.0/255.0};};
+  static rgb LightSkyBlue() {return {135.0/255.0, 206.0/255.0, 250.0/255.0};};
+  static rgb SkyBlue() {return {135.0/255.0, 206.0/255.0, 235.0/255.0};};
+  static rgb DeepSkyBlue() {return {0.0/255.0, 191.0/255.0, 255.0/255.0};};
+  static rgb LightSteelBlue() {return {176.0/255.0, 196.0/255.0, 222.0/255.0};};
+  static rgb DodgerBlue() {return {30.0/255.0, 144.0/255.0, 255.0/255.0};};
+  static rgb CornflowerBlue() {return {100.0/255.0, 149.0/255.0, 237.0/255.0};};
+  static rgb SteelBlue() {return {70.0/255.0, 130.0/255.0, 180.0/255.0};};
+  static rgb CadetBlue() {return {95.0/255.0, 158.0/255.0, 160.0/255.0};};
+  static rgb MediumSlateBlue() {return {123.0/255.0, 104.0/255.0, 238.0/255.0};};
+  static rgb SlateBlue() {return {106.0/255.0, 90.0/255.0, 205.0/255.0};};
+  static rgb DarkSlateBlue() {return {72.0/255.0, 61.0/255.0, 139.0/255.0};};
+  static rgb MediumBlue() {return {0.0/255.0, 0.0/255.0, 205.0/255.0};};
+  static rgb RoyalBlue() {return {65.0/255.0, 105.0/255.0, 225.0/255.0};};
+  static rgb DarkBlue() {return {0.0/255.0, 0.0/255.0, 139.0/255.0};};
+  static rgb Navy() {return {0.0/255.0, 0.0/255.0, 128.0/255.0};};
+  static rgb MidnightBlue() {return {25.0/255.0, 25.0/255.0, 112.0/255.0};};
+  static rgb BlueViolet() {return {138.0/255.0, 43.0/255.0, 226.0/255.0};};
+  static rgb Indigo() {return {75.0/255.0, 0.0/255.0, 130.0/255.0};};
+
+
+
 };
 
 

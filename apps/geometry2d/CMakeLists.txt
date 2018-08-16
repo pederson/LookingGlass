@@ -5,7 +5,7 @@ PROJECT(geometry2d)
 
 #SET(CMAKE_CXX_COMPILER #"${PETSC_DIR}/${PETSC_ARCH}/bin/mpicxx")
 SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
-SET(CMAKE_CXX_FLAGS "-std=c++11")
+SET(CMAKE_CXX_FLAGS "-std=c++14")
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 MESSAGE(STATUS "  *************** ")
 FOREACH(item ${CMAKE_MODULE_PATH})
@@ -28,10 +28,11 @@ FILE(GLOB lg_SRC "../../src/*.cpp")
 
 SET(INCL_FOLDER "../../include")
 SET(CSG_FOLDER "../../../CompGeometry")
+SET(TINYXML_FOLDER "../../../tinyxml2")
 
-INCLUDE_DIRECTORIES(${INCL_FOLDER} ${CSG_FOLDER})
+INCLUDE_DIRECTORIES(${INCL_FOLDER} ${CSG_FOLDER} ${TINYXML_FOLDER})
 
-ADD_EXECUTABLE(geometry2d geometry2d.cpp ${lg_SRC})
+ADD_EXECUTABLE(geometry2d "../../../tinyxml2/tinyxml2.cpp" geometry2d.cpp ${lg_SRC} )
 
 FOREACH(item ${INCL_FOLDER})
     MESSAGE(STATUS "  including: " ${item})
