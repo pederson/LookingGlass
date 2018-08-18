@@ -258,8 +258,8 @@ public:
 			if (m_vertices[7*i+2] < zmin) zmin = m_vertices[7*i+2];
 
 			if (m_vertices[7*i] > xmax) xmax = m_vertices[7*i];
-			if (m_vertices[7*i+1] > ymin) ymax = m_vertices[7*i+1];
-			if (m_vertices[7*i+2] > zmin) zmax = m_vertices[7*i+2];
+			if (m_vertices[7*i+1] > ymax) ymax = m_vertices[7*i+1];
+			if (m_vertices[7*i+2] > zmax) zmax = m_vertices[7*i+2];
 		}
 		std::cout << "xmin: " << xmin << " xmax: " << xmax << std::endl;
 		std::cout << "ymin: " << ymin << " ymax: " << ymax << std::endl;

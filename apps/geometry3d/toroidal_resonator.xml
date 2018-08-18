@@ -1,0 +1,77 @@
+<CSGTree> 
+	<Operation>DIFFERENCE</Operation>
+	<Left> 
+		<CSGTree> 
+			<Operation>DIFFERENCE</Operation>
+			<Left> 
+				<CSGTree> 
+					<Operation>DIFFERENCE</Operation>
+					<Left> 
+						<CSGTree> 
+							<Operation>UNION</Operation>
+							<Left> 
+								<CSGTree> 
+									<Operation>DIFFERENCE</Operation>
+									<Left> 
+										<Cylinder>
+											<Center>(0, 0, -0.001)</Center>
+											<Normal>(0, 0, 1)</Normal>
+											<XDir>(1, 0, 0)</XDir>
+											<Radius>0.0075</Radius>
+											<Height>0.002</Height>
+										</Cylinder>
+									</Left>
+									<Right> 
+										<Cylinder>
+											<Center>(0, 0, -0.001)</Center>
+											<Normal>(0, 0, 1)</Normal>
+											<XDir>(1, 0, 0)</XDir>
+											<Radius>0.0055</Radius>
+											<Height>0.002</Height>
+										</Cylinder>
+									</Right>
+								</CSGTree> 
+							</Left>
+							<Right> 
+								<RectangularPrism>
+									<Center>(0, 0, -0.001)</Center>
+									<Normal>(0, 0, 1)</Normal>
+									<XDir>(1, 0, 0)</XDir>
+									<Dims>(0.002, 0.015)</Dims>
+									<Height>0.002</Height>
+								</RectangularPrism>
+							</Right>
+						</CSGTree> 
+					</Left>
+					<Right> 
+						<RectangularPrism>
+							<Center>(0, 0, -0.001)</Center>
+							<Normal>(0, 0, 1)</Normal>
+							<XDir>(1, 0, 0)</XDir>
+							<Dims>(0.015, 0.00075)</Dims>
+							<Height>0.002</Height>
+						</RectangularPrism>
+					</Right>
+				</CSGTree> 
+			</Left>
+			<Right> 
+				<RectangularPrism>
+					<Center>(0.0075, 0, -0.001)</Center>
+					<Normal>(0, 0, 1)</Normal>
+					<XDir>(1, 0, 0)</XDir>
+					<Dims>(0.0075, 0.001)</Dims>
+					<Height>0.002</Height>
+				</RectangularPrism>
+			</Right>
+		</CSGTree> 
+	</Left>
+	<Right> 
+		<RectangularPrism>
+			<Center>(-0.0075, 0, -0.001)</Center>
+			<Normal>(0, 0, 1)</Normal>
+			<XDir>(1, 0, 0)</XDir>
+			<Dims>(0.0075, 0.001)</Dims>
+			<Height>0.002</Height>
+		</RectangularPrism>
+	</Right>
+</CSGTree> 

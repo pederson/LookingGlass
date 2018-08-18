@@ -1,0 +1,7 @@
+<Cylinder>
+	<Center>(0, 0, 0)</Center>
+	<Normal>(0, 0, 1)</Normal>
+	<XDir>(1, 0, 0)</XDir>
+	<Radius>1</Radius>
+	<Height>4</Height>
+</Cylinder>

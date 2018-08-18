@@ -1,0 +1,12 @@
+<Extrusion>
+	<Base>
+		<Circle>
+			<Center>(0,0)</Center>
+			<Radius>1</Radius>
+		</Circle>
+	</Base>
+	<Center>(0, 0, 0)</Center>
+	<Normal>(0, 0, 1)</Normal>
+	<XDir>(1, 0, 0)</XDir>
+	<Height>4</Height>
+</Extrusion>

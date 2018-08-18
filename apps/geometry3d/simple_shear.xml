@@ -1,0 +1,15 @@
+<LinearTransformation>
+	<Mapping>
+		<ShearMapping>
+			<Upper>(0, 1, 0)</Upper>
+			<Lower>(,0,0)</Lower>
+		</ShearMapping>
+	</Mapping>
+
+	<Primitive>
+		<Sphere>
+			<Center>(0, 0, 0)</Center>
+			<Radius>1</Radius>
+		</Sphere>
+	</Primitive>
+</LinearTransformation>

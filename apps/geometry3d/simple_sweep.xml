@@ -1,0 +1,14 @@
+<Sweep>
+	<Center>(0, 0, 0)</Center>
+	<Normal>(0, 0, 1)</Normal>
+	<XDir>(1, 0, 0)</XDir>
+	<LinePoint>(2, 0, 0)</LinePoint>
+	<LineDir>(0, 1, 0)</LineDir>
+	<Base>
+		<Rectangle>
+			<Center>(0, 0)</Center>
+			<Dims>(1, 0.5)</Dims>
+		</Rectangle>
+	</Base>
+	<Angle>180</Angle>
+</Sweep>

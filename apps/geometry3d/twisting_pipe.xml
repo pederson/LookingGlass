@@ -1,0 +1,59 @@
+<CSGTree> 
+	<Operation>UNION</Operation>
+	<Left> 
+		<Sweep>
+			<Center>(0, 0, 0)</Center>
+			<Normal>(0, 0, 1)</Normal>
+			<XDir>(1, 0, 0)</XDir>
+			<LinePoint>(3, 0, 0)</LinePoint>
+			<LineDir>(0, 1, 0)</LineDir>
+			<Base>
+				<CSGTree> 
+					<Operation>DIFFERENCE</Operation>
+					<Left> 
+						<Circle>
+							<Center>(0, 0)</Center>
+							<Radius>1</Radius>
+						</Circle>
+					</Left>
+					<Right> 
+						<Circle>
+							<Center>(0, 0)</Center>
+							<Radius>0.8</Radius>
+						</Circle>
+					</Right>
+				</CSGTree> 
+			</Base>
+			<Angle>90</Angle>
+		</Sweep>
+	</Left>
+	<Right> 
+		<Sweep>
+			<Center>(0, 0, 0)</Center>
+			<Normal>(0,0,1)</Normal>
+			<XDir>(1,0,0)</XDir>
+			<LinePoint>(-3, 0, 0)</LinePoint>
+			<LineDir>(0, 1, 0)</LineDir>
+			<Base>
+				<CSGTree> 
+					<Operation>DIFFERENCE</Operation>
+					<Left> 
+						<Circle>
+							<Center>(0, 0)</Center>
+							<Radius>1</Radius>
+						</Circle>
+					</Left>
+					<Right> 
+						<Circle>
+							<Center>(0, 0)</Center>
+							<Radius>0.8</Radius>
+						</Circle>
+					</Right>
+				</CSGTree> 
+			</Base>
+			<Angle>90</Angle>
+		</Sweep>
+	</Right>
+</CSGTree> 
+
+

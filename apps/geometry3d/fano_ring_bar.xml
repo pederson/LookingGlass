@@ -1,0 +1,35 @@
+<CSGTree> 
+	<Operation>UNION</Operation>
+	<Left> 
+		<CSGTree> 
+			<Operation>DIFFERENCE</Operation>
+			<Left> 
+				<Cylinder>
+					<Center>(0, 0, -5.5e-08)</Center>
+					<Normal>(0, 0, 1)</Normal>
+					<XDir>(1, 0, 0)</XDir>
+					<Radius>2.25e-07</Radius>
+					<Height>1.1e-07</Height>
+				</Cylinder>
+			</Left>
+			<Right> 
+				<Cylinder>
+					<Center>(0, 0, -5.5e-08)</Center>
+					<Normal>(0, 0, 1)</Normal>
+					<XDir>(1, 0, 0)</XDir>
+					<Radius>1.1e-07</Radius>
+					<Height>1.1e-07</Height>
+				</Cylinder>
+			</Right>
+		</CSGTree> 
+	</Left>
+	<Right> 
+		<RectangularPrism>
+			<Center>(-3.8e-07, 0, -5.5e-08)</Center>
+			<Normal>(0, 0, 1)</Normal>
+			<XDir>(1, 0, 0)</XDir>
+			<Dims>(1.5e-07, 7.2e-07)</Dims>
+			<Height>1.1e-07</Height>
+		</RectangularPrism>
+	</Right>
+</CSGTree>

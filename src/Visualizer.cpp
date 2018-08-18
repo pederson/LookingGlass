@@ -216,9 +216,17 @@ void Visualizer::onMouseWheel(double xoffset, double yoffset){
 
 void Visualizer::onKeyboard(int key, int scancode, int action, int modifiers){
 	// //std::cout << "KEYBOARD PRESS" << std::endl;
-	// if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){ // resets the view
-	// 	onKeySpace();
-	// }
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS){ // resets the view
+		// onKeySpace();
+		glm::vec3 xax(0,1,0);
+		m_eye_vec = m_focus_vec + glm::rotateY((m_eye_vec-m_focus_vec), 45.0f);
+		m_view = glm::lookAt(
+        m_eye_vec,
+        m_focus_vec,
+        m_up_vec
+    );
+	// view = glm::lookAt(new_eye, focus_vec, up_vec);
+	}
 	// else if (key == GLFW_KEY_C && action == GLFW_PRESS){
 	// 	onKeyC();
 	// }
@@ -235,26 +243,26 @@ void Visualizer::onCursorPosition(double xpos, double ypos){
 
 //DYLAN_TODO: do this using quaternions instead
 void Visualizer::onMouseLeftDrag(double xpos, double ypos){
-	/*
-	double new_x_pos, new_y_pos;
-	int width, height;
-	glm::vec3 rot_vec, in_world_ip;
+	
+	// double new_x_pos, new_y_pos;
+	// int width, height;
+	// glm::vec3 rot_vec, in_world_ip;
 
-	glfwGetWindowSize(m_window_ptr, &width, &height);
-	glfwGetCursorPos(m_window_ptr, &new_x_pos, &new_y_pos);
+	// glfwGetWindowSize(m_window_ptr, &width, &height);
+	// glfwGetCursorPos(m_window_ptr, &new_x_pos, &new_y_pos);
 
-	rotdeg = ((new_x_pos-x_upon_click)*(new_x_pos-x_upon_click)
-					 + (new_y_pos-y_upon_click)*(new_y_pos-y_upon_click))/(width*width + height*height)*VX_PI/2;
+	// rotdeg = ((new_x_pos-x_upon_click)*(new_x_pos-x_upon_click)
+	// 				 + (new_y_pos-y_upon_click)*(new_y_pos-y_upon_click))/(width*width + height*height)*VX_PI/2;
 
 
-	in_world_ip = float(new_x_pos-x_upon_click)*-camera_side + float(new_y_pos-y_upon_click)*camera_up;
+	// in_world_ip = float(new_x_pos-x_upon_click)*-camera_side + float(new_y_pos-y_upon_click)*camera_up;
 
-	// comes from the cross product
-	rot_vec = glm::cross(in_world_ip, focus_vec - eye_vec);
+	// // comes from the cross product
+	// rot_vec = glm::cross(in_world_ip, focus_vec - eye_vec);
 
-	new_eye = focus_vec +  glm::rotate((eye_vec-focus_vec), rotdeg, rot_vec);
-	view = glm::lookAt(new_eye, focus_vec, up_vec);
-	*/
+	// new_eye = focus_vec +  glm::rotate((eye_vec-focus_vec), rotdeg, rot_vec);
+	// view = glm::lookAt(new_eye, focus_vec, up_vec);
+	
 }
 
 void Visualizer::onMouseRightDrag(double xpos, double ypos){
@@ -879,7 +887,7 @@ void Visualizer::onShaders(){
 	glUniformMatrix4fv(m_uniView, 1, GL_FALSE, glm::value_ptr(m_view));
 
 	// m_proj = glm::perspective(0.785f, float(DEFAULT_WIDTH)/float(DEFAULT_HEIGHT), 0.000005f, 100000.0f);
-	m_proj = glm::perspective(1.785f, float(DEFAULT_WIDTH)/float(DEFAULT_HEIGHT), 0.000005f, 100000.0f);
+	m_proj = glm::perspective(1.785f, float(DEFAULT_WIDTH)/float(DEFAULT_HEIGHT), 1.0e-1F*m_eyez_init, 1.0e+9F);
 	m_uniProj = glGetUniformLocation(m_shaderProgram, "proj");
 	glUniformMatrix4fv(m_uniProj, 1, GL_FALSE, glm::value_ptr(m_proj));
 
